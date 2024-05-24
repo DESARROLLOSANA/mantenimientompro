@@ -1,0 +1,12 @@
+frmZADD388 = 104, 104, 945, 414, , 78, 78, 919, 388, C
+Publico = 0, 0, 915, 310, 
+Pantalla = 0, 0, 0, 0, C
+frmOrden_Servicio = 78, 78, 889, 390, , 52, 52, 863, 364, C
+frmSol_Refacciones = 104, 104, 915, 416, , 26, 26, 841, 364, C
+frmSolicitud = 130, 130, 941, 442, Z, 156, 156, 967, 468, C
+frmSurtir_Refaccion = 130, 130, 1045, 440, , 26, 26, 867, 336, C
+frmSubtipos = 0, 0, 0, 0, C, 52, 52, 893, 362, C
+frmTipoDanio = 0, 0, 0, 0, C, 78, 78, 919, 388, C
+frmCancelarSurtidos = 0, 0, 0, 0, C, 104, 104, 945, 414, C
+frmMano_Obra = 0, 0, 0, 0, C, 130, 130, 971, 440, C
+frmLista_Mano_Obra = 0, 0, 0, 0, C, 0, 0, 841, 310, C

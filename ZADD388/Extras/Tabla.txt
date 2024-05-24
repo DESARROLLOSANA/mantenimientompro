@@ -1,0 +1,377 @@
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Solicitud_Trabajo](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Operador_Id] [nvarchar](150) NOT NULL,
+	[Nombre] [nvarchar](240) NOT NULL,
+	[Fecha] [datetime] NOT NULL,
+	[Equipo_Id] [nvarchar](150) NOT NULL,
+	[Km] [decimal](21, 4) NOT NULL,
+	[Hr] [decimal](21, 4) NOT NULL,
+	[Descripcion] [ntext] NOT NULL DEFAULT (''),
+	[Oper_Alta] [nvarchar](15) NOT NULL,
+	[Fecha_Alta] [datetime] NOT NULL,
+	[Oper_Ult_Modif] [nvarchar](15) NOT NULL,
+	[Fecha_Ult_Modif] [datetime] NOT NULL,
+	[Oper_Baja] [nvarchar](15) NOT NULL DEFAULT (''),
+	[Fecha_Baja] [datetime] NULL,
+	[Es_Cve_Estado] [nvarchar](4) NOT NULL,
+ CONSTRAINT [PK_Solicitud_Trabajo] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, FILLFACTOR = 90) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+
+ALTER TABLE Solicitud_Trabajo ADD[Descripcion] [ntext] NOT NULL DEFAULT('')
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE Orden_Trabajo (
+	[Ot_Folio] [nvarchar](10) NOT NULL,
+	[Ot_Fecha] [datetime] NOT NULL,
+	[Ot_Operador] [nvarchar](240) NOT NULL,
+	[Eq_Cve_Equipo] [nvarchar](10) NOT NULL,
+	[Sc_Cve_Sucursal] [nvarchar](4) NOT NULL,
+	[To_Cve_Tipo_Orden_Servicio] [nvarchar](10) NOT NULL,
+	[Ts_Cve_Tipo_Servicio] [nvarchar](10) NOT NULL,
+	[Ot_Lugar_Servicio] [nvarchar](2) NOT NULL,
+	[Ot_Modo_Servicio] [nvarchar](2) NOT NULL,
+	[Ot_Tabla] [nvarchar](50) NOT NULL,
+	[Ot_Documento] [nvarchar](10) NOT NULL,
+	[Ot_Referencia] [nvarchar](15) NOT NULL,
+	[Ot_Problema] [ntext] NOT NULL,
+	[Te_Cve_Tecnico] [nvarchar](10) NOT NULL,
+	[Pv_Cve_Proveedor] [nvarchar](10) NOT NULL,
+	[Ot_Justificacion] [ntext] NOT NULL,
+	[Ot_Mano_Obra] [decimal](18, 0) NOT NULL,
+
+	[Oper_Alta] [nvarchar](15) NOT NULL,
+	[Fecha_Alta] [datetime] NOT NULL,
+	[Oper_Ult_Modif] [nvarchar](15) NOT NULL,
+	[Fecha_Ult_Modif] [datetime] NOT NULL,
+	[Oper_Baja] [nvarchar](15) NOT NULL DEFAULT(''),
+	[Fecha_Baja] [datetime] NULL,
+	[Es_Cve_Estado] [nvarchar](4) NOT NULL DEFAULT('PXA'),
+ CONSTRAINT [PK_Orden_Trabajo] PRIMARY KEY NONCLUSTERED 
+(
+	[Ot_Folio] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE Orden_Trabajo ADD[Ss_Cve_Subtipo_Servicio] [nvarchar](10) NOT NULL DEFAULT('')
+ALTER TABLE Orden_Trabajo ADD[Ot_Tipo_Danio] [ntext] NOT NULL DEFAULT('')
+
+--============================================================================
+--============================================================================
+--============================================================================
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE Solicitud_Refaccion_Encabezado (
+	[Sr_Folio] [nvarchar](10) NOT NULL,
+	[Ot_Folio] [nvarchar](10) NOT NULL,
+	[Id_Solicitud_Trabajo] [nvarchar](10) NOT NULL,
+	[Sr_Fecha] [datetime] NOT NULL,
+	[Sc_Cve_Sucursal] [Nvarchar](10) NOT NULL,
+	[Al_Cve_Almacen] [Nvarchar](10) NOT NULL,
+	[Te_Cve_Tecnico] [nvarchar](15) NOT NULL,
+	[Sr_Comentario] [nvarchar](50) NOT NULL,
+	
+	[Oper_Alta] [nvarchar](15) NOT NULL,
+	[Fecha_Alta] [datetime] NOT NULL,
+	[Oper_Baja] [nvarchar](15) NOT NULL DEFAULT(''),
+	[Fecha_Baja] [datetime] NULL,
+	[Oper_Ult_Modif] [nvarchar](15) NOT NULL,
+	[Fecha_Ult_Modif] [datetime] NOT NULL,
+	[Es_Cve_Estado] [nvarchar](4) NOT NULL DEFAULT('AC'),
+ CONSTRAINT [PK_Solicitud_Refaccion_Encabezado] PRIMARY KEY NONCLUSTERED 
+(
+	[Sr_Folio] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE Solicitud_Refaccion_Detalle (
+	[Sr_Folio] [nvarchar](10) NOT NULL,
+	[Sr_Id] [nvarchar](4) NOT NULL,
+	[Pr_Cve_Producto] [nvarchar](10) NOT NULL,
+	[Tl_Cve_Talla] [nvarchar](4) NOT NULL,
+	[Cl_Cve_Color] [nvarchar](4) NOT NULL,
+	[Sr_Cantidad] [decimal](18, 9) NOT NULL,
+	[Sr_Unidad] [nvarchar](4) NOT NULL,
+	[Sr_Cantidad_Control_1] [decimal](18, 9) NOT NULL,
+	[Sr_Unidad_Control_1] [nvarchar](4) NOT NULL,
+	[Sr_Cantidad_Control_2] [decimal](18, 9) NOT NULL,
+	[Sr_Unidad_Control_2] [nvarchar](4) NOT NULL,
+CONSTRAINT [PK_Solicitud_Refaccion_Detalle] PRIMARY KEY NONCLUSTERED 
+(
+	[Sr_Folio] ASC,
+	[Sr_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+--============================================================================
+--============================================================================
+--============================================================================
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE Entrega_Refaccion(
+	[Er_Folio] [nvarchar](10) NOT NULL,
+	[Id_Solicitud_Trabajo] [nvarchar](10) NOT NULL,
+	[Ot_Folio] [nvarchar](10) NOT NULL,
+	[Sr_Folio] [nvarchar](10) NOT NULL,
+	[Er_Fecha] [datetime] NOT NULL,
+	[Er_Tabla] [nvarchar](50) NOT NULL,
+	[Er_Documento] [nvarchar](10) NOT NULL,
+	[Er_Orden] [nvarchar](10) NOT NULL,   -- FOLIO ORDEN SERVICIO
+	[Er_Comentario] [nvarchar](50) NOT NULL,
+	[Er_Referencia] [nvarchar](15) NOT NULL,
+	[Te_Cve_Tecnico] [nvarchar](10) NOT NULL,
+	[Sc_Cve_Sucursal] [nvarchar](4) NOT NULL,
+	[Al_Cve_Almacen] [nvarchar](4) NOT NULL,
+
+	[Te_Cve_Tipo_Equipo] [nvarchar](4) NOT NULL,
+	[Eq_Cve_Equipo] [nvarchar](10) NOT NULL,
+	[Eq_Num_Economico] [nvarchar](50) NOT NULL,
+	[Eq_Serie] [nvarchar](50) NOT NULL,
+	[Eq_Tipo_Equipo_Parte] [nvarchar](10) NOT NULL,
+
+	[Er_Cerrar] [nvarchar](2) NOT NULL DEFAULT('NO'),
+	[Er_Servicio_Interno] [nvarchar](2) NOT NULL DEFAULT('NO'),
+
+	[Er_SubTotal] [decimal](19,4) NOT NULL,
+	[Er_Impuesto] [decimal](19,4) NOT NULL,
+	[Er_Total] [decimal](19,4) NOT NULL,
+
+	[Oper_Alta] [nvarchar](15) NOT NULL,
+	[Fecha_Alta] [datetime] NOT NULL,
+	[Oper_Baja] [nvarchar](15) NOT NULL DEFAULT (''),
+	[Fecha_Baja] [datetime] NULL,
+	[Oper_Ult_Modif] [nvarchar](15) NOT NULL,
+	[Fecha_Ult_Modif] [datetime] NOT NULL,
+	[Es_Cve_Estado] [nvarchar](4) NOT NULL DEFAULT ('AC'),
+ CONSTRAINT [PK_Entrega_Refaccion] PRIMARY KEY CLUSTERED 
+(
+	[Er_Folio] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+-- ========================= DETALLE =======================================
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE Entrega_Refaccion_Detalle(
+	[Er_Folio] [nvarchar](10) NOT NULL,
+	[Erd_Id] [nvarchar](4) NOT NULL,
+	[Erd_Sucursal_Inventario] [nvarchar](4) NOT NULL,
+	[Erd_Almacen_Inventario] [nvarchar](4) NOT NULL,
+
+	[Pr_Cve_Producto] [nvarchar](10) NOT NULL,
+	[Tl_Cve_Talla] [nvarchar](4) NOT NULL,
+	[Cl_Cve_Color] [nvarchar](4) NOT NULL,
+	[Erd_Serie] [nvarchar](240) NOT NULL,
+	[Erd_Lote] [nvarchar](240) NOT NULL,
+	[Erd_Cantidad] [decimal](18, 9) NOT NULL,
+	[Erd_Unidad] [nvarchar](4) NOT NULL,
+	[Erd_Cantidad_Control_1] [decimal](19, 4) NOT NULL,
+	[Erd_Unidad_Control_1] [nvarchar](4) NOT NULL,
+	[Erd_Cantidad_Control_2] [decimal](19, 4) NOT NULL,
+	[Erd_Unidad_Control_2] [nvarchar](4) NOT NULL,
+	[Erd_Cantidad_Costo] [decimal](19, 4) NOT NULL,
+	[Erd_Unidad_Costo] [nvarchar](4) NOT NULL,
+
+	[Erd_Costo] [decimal](19, 4) NOT NULL,
+	[Erd_Costo_Importe] [decimal](19, 4) NOT NULL,
+
+	[Erd_Precio_Lista] [decimal](19, 4) NOT NULL,
+	[Erd_Precio_Lista_Importe] [decimal](19, 4) NOT NULL,
+	[Erd_Descuento_Factor] [decimal](19, 4) NOT NULL,
+	[Erd_Descuento_Importe] [decimal](19, 4) NOT NULL,
+	[Erd_Impuesto_Factor] [decimal](19, 4) NOT NULL,
+	[Erd_Impuesto_Importe] [decimal](19, 4) NOT NULL,
+	[Erd_Precio_Descontado] [decimal](19, 4) NOT NULL,
+	[Erd_Precio_Descontado_Importe] [decimal](19, 4) NOT NULL,
+	[Erd_Precio_Neto] [decimal](19, 4) NOT NULL,
+	[Erd_Precio_Neto_Importe] [decimal](19, 4) NOT NULL,
+	
+ CONSTRAINT [PK_Entrega_Refaccion_Detalle] PRIMARY KEY CLUSTERED 
+(
+	[Er_Folio] ASC,
+	[Erd_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+-- =========================================================================
+-- =========================================================================
+-- =========================================================================
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE Subtipo_Servicio (
+	[Ss_Cve_Subtipo_Servicio] [nvarchar](10) NOT NULL,
+	[Ss_Descripcion] [nvarchar](240) NOT NULL,
+	[Oper_Alta] [nvarchar](15) NOT NULL,
+	[Fecha_Alta] [datetime] NOT NULL,
+	[Oper_Ult_Modif] [nvarchar](15) NOT NULL,
+	[Fecha_Ult_Modif] [datetime] NOT NULL,
+	[Oper_Baja] [nvarchar](15) NOT NULL DEFAULT(''),
+	[Fecha_Baja] [datetime] NULL,
+	[Es_Cve_Estado] [nvarchar](4) NOT NULL DEFAULT('AC'),
+ CONSTRAINT [PK_Subtipo_Servicio] PRIMARY KEY CLUSTERED 
+(
+	[Ss_Cve_Subtipo_Servicio] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+-- =========================================================================
+
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE Tipo_Danio (
+	[Td_Cve_Tipo_Danio] [nvarchar](10) NOT NULL,
+	[Td_Descripcion] [nvarchar](240) NOT NULL,
+	[Oper_Alta] [nvarchar](15) NOT NULL,
+	[Fecha_Alta] [datetime] NOT NULL,
+	[Oper_Ult_Modif] [nvarchar](15) NOT NULL,
+	[Fecha_Ult_Modif] [datetime] NOT NULL,
+	[Oper_Baja] [nvarchar](15) NOT NULL DEFAULT(''),
+	[Fecha_Baja] [datetime] NULL,
+	[Es_Cve_Estado] [nvarchar](4) NOT NULL DEFAULT('AC'),
+ CONSTRAINT [PK_Tipo_Danio] PRIMARY KEY CLUSTERED 
+(
+	[Td_Cve_Tipo_Danio] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+-- ==============================================================================
+-- ==============================================================================
+-- ==============================================================================
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE Orden_Trabajo_Tipo_Danio (
+	[Ot_Folio] [nvarchar](10) NOT NULL,
+	[Ot_Id] [nvarchar](4) NOT NULL,
+	[Td_Cve_Tipo_Danio] [nvarchar](10) NOT NULL,
+ CONSTRAINT [PK_Orden_Trabajo_Tipo_Danio] PRIMARY KEY CLUSTERED 
+(
+	[Ot_Folio] ASC,
+	[Ot_Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+-- ==============================================================================
+-- ==============================================================================
+-- ==============================================================================
+ALTER TABLE Entrega_Refaccion ADD[Er_Tipo] [NVarchar](2) NOT NULL DEFAULT('01')
+ALTER TABLE Entrega_Refaccion_Detalle ADD[Er_Tipo] [NVarchar](2) NOT NULL DEFAULT('01')
+
+SET ANSI_NULLS ON
+GO
+
+-- ==============================================================================
+-- TABLA MANO DE OBRA :::
+-- ==============================================================================
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE Mano_Obra(
+	[Mo_Folio] [nvarchar](10) NOT NULL,
+	[Id_Solicitud_Trabajo] [nvarchar](10) NOT NULL,  --> SOLICITUD
+	[Ot_Folio] [nvarchar](10) NOT NULL,    --> ORDEN TRABAJO
+	[Mo_Fecha] [datetime] NOT NULL,
+	[Sc_Cve_Sucursal] [nvarchar](4) NOT NULL,
+	[Te_Cve_Tecnico] [nvarchar](10) NOT NULL,
+	[Mo_Tabla] [nvarchar](240) NOT NULL,
+	[Mo_Documento] [nvarchar](10) NOT NULL,
+	[Pr_Cve_Producto] [nvarchar](10) NOT NULL,
+	[Mo_Precio] [decimal](19,4) NOT NULL,
+	[Mo_Comentario] [nvarchar](240) NOT NULL,
+	[Mo_SubTotal] [decimal](19,4) NOT NULL,
+	[Mo_Impuesto] [decimal](19,4) NOT NULL,
+	[Mo_Total] [decimal](19,4) NOT NULL,
+
+	[Oper_Alta] [nvarchar](15) NOT NULL,
+	[Fecha_Alta] [datetime] NOT NULL,
+	[Oper_Baja] [nvarchar](15) NOT NULL DEFAULT (''),
+	[Fecha_Baja] [datetime] NULL,
+	[Oper_Ult_Modif] [nvarchar](15) NOT NULL,
+	[Fecha_Ult_Modif] [datetime] NOT NULL,
+	[Es_Cve_Estado] [nvarchar](4) NOT NULL DEFAULT ('AC'),
+ CONSTRAINT [PK_Mano_Obra] PRIMARY KEY CLUSTERED 
+(
+	[Mo_Folio] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+
+--===========================================================
+-- CAMPO DE URGENTE EN LA SOLICITUD DE REFACCIONES :::
+--===========================================================
+ALTER TABLE Solicitud_Refaccion_Encabezado ADD[Sr_Urgente] [NVarchar](4) NOT NULL DEFAULT('0000')
+
+--===========================================================
+-- IMPORTES PANTALLA MANO DE OBRA :::
+--===========================================================
+ALTER TABLE Mano_Obra ADD[Mo_Impuesto_Prod] [decimal](19,4) NOT NULL DEFAULT(0)
+ALTER TABLE Mano_Obra ADD[Mo_Total_Prod] [decimal](19,4) NOT NULL DEFAULT(0)
+ALTER TABLE Mano_Obra ADD[Mo_Total_Global] [decimal](19,4) NOT NULL DEFAULT(0)
+
+
+
+
+
+
+
+
+
+

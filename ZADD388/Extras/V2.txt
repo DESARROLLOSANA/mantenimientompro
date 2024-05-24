@@ -1,0 +1,17 @@
+SET QUOTED_IDENTIFIER OFF
+GO
+
+INSERT INTO Configuracion(Cv_Cve_Clase_Variable, Cf_Variable, Cf_Valor, Cf_Descripcion, Cf_Tipo, Cf_Edit, Modificado) 
+VALUES('99', 'ZADD388_CECO_PRESUPUESTO', '1506', 'CENTRO DE COSTO PARA OBTENER EL PRESUPUESTO', 'T', 'SI', '20120215 13:37:12')
+GO
+
+INSERT INTO Configuracion(Cv_Cve_Clase_Variable, Cf_Variable, Cf_Valor, Cf_Descripcion, Cf_Tipo, Cf_Edit, Modificado) 
+VALUES('99', 'ZADD388_PRODUCTO_REQ', '0000000561', 'CLAVE DE PRODUCTO PARA ACTUALIZAR REQUISICION', 'T', 'SI', '20120215 13:37:12')
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+Alter Table Requisicion_Compra Add[Rc_Precio] [Decimal](19,4) NOT NULL Default(0)
+Alter Table Requisicion_Compra Add[Mo_Folio] [Nvarchar](10) NOT NULL Default('')

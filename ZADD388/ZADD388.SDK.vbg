@@ -1,0 +1,3 @@
+VBGROUP 5.0
+Project=ZADD388.vbp
+StartupProject=..\..\SDK\SDK.vbp

@@ -1,0 +1,35 @@
+------------------------------------------------------------------------------------------
+-- INSERTA NUEVAS VARIABLES
+-- EJECUTAR EN LA BASE DE DATOS LOCAL
+------------------------------------------------------------------------------------------
+
+SET QUOTED_IDENTIFIER OFF
+GO
+
+INSERT INTO Configuracion(Cv_Cve_Clase_Variable, Cf_Variable, Cf_Valor, Cf_Descripcion, Cf_Tipo, Cf_Edit, Modificado) 
+VALUES('99', 'ZADD388_FTO_IMP_ORDEN_TRABAJO', 'Z388_1', 'FORMATO PARA LA IMPRESION DE ORDENES DE TRABAJO.', 'T', 'SI', '20000101')
+GO
+
+INSERT INTO Configuracion(Cv_Cve_Clase_Variable, Cf_Variable, Cf_Valor, Cf_Descripcion, Cf_Tipo, Cf_Edit, Modificado) 
+VALUES('99', 'ZADD388_FTO_IMP_SOL_REFACCION', 'Z388_2', 'FORMATO PARA LA IMPRESION DE SOLICITUDES DE REFACCIONES.', 'T', 'SI', '20000101')
+GO
+
+INSERT INTO Configuracion(Cv_Cve_Clase_Variable, Cf_Variable, Cf_Valor, Cf_Descripcion, Cf_Tipo, Cf_Edit, Modificado) 
+VALUES('99', 'ZADD388_FTO_IMP_SURTIDO_REF', 'Z388_3', 'INDICA CUAL ES EL FORMATO DE IMPRESION DEL SURTIDO DE REFACCIONES', 'T', 'SI', '20000101')
+GO
+
+INSERT INTO Configuracion(Cv_Cve_Clase_Variable, Cf_Variable, Cf_Valor, Cf_Descripcion, Cf_Tipo, Cf_Edit, Modificado) 
+VALUES('99', 'FTO_SUBTIPO_SERVICIO', '0000', 'FORMATO DE SUBTIPOS DE SERVICIO, PANTALLA ZADD388', 'T', 'SI', '20120215 13:37:12')
+GO
+
+INSERT INTO Configuracion(Cv_Cve_Clase_Variable, Cf_Variable, Cf_Valor, Cf_Descripcion, Cf_Tipo, Cf_Edit, Modificado) 
+VALUES('99', 'FTO_TIPO_DANIO', '0000', 'FORMATO DE TIPOS DE DAÑO, PANTALLA ZADD388', 'T', 'SI', '20120215 13:37:12')
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+

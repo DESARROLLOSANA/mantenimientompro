@@ -1,0 +1,274 @@
+SET QUOTED_IDENTIFIER OFF
+GO
+
+
+------------------------------------------------------------------------------------------
+-- PROCEDIMIENTOS ALMACENADOS DE Z388_2
+------------------------------------------------------------------------------------------
+IF EXISTS (SELECT * FROM Sysobjects Where Name = 'SP_RPT_Z388_2_1' and type= 'P') DROP PROCEDURE SP_RPT_Z388_2_1
+GO
+CREATE PROCEDURE SP_RPT_Z388_2_1
+@Sr_Folio as nVarChar(10)
+AS
+SELECT 
+	Sr_Folio AS FOLIO,
+	Id_Solicitud_Trabajo AS SOLICITUD,
+	Ot_Folio AS FOLIO_OT,
+	Sr_Fecha AS FECHA,
+	DATENAME(MONTH, Sr_Fecha)  + ' ' + CAST(YEAR(Sr_Fecha) AS nvarchar(15)) AS EMISION,
+	Solicitud_Refaccion_Encabezado.Sc_Cve_Sucursal AS CVE_SUCURSAL,
+	Sucursal.Sc_Descripcion AS DESC_SUCURSAL,
+	Solicitud_Refaccion_Encabezado.Sc_Cve_Sucursal + ' - ' + Sucursal.Sc_Descripcion AS SUCURSAL,
+	Solicitud_Refaccion_Encabezado.Al_Cve_Almacen AS CVE_ALMACEN,
+	Almacen.Al_Descripcion AS DESC_ALMACEN,
+	Solicitud_Refaccion_Encabezado.Al_Cve_Almacen + ' - ' + Almacen.Al_Descripcion AS ALMACEN,
+	Solicitud_Refaccion_Encabezado.Te_Cve_Tecnico AS CVE_TECNICO,
+	Tecnico.Te_Descripcion AS DESC_TECNICO,
+	Solicitud_Refaccion_Encabezado.Te_Cve_Tecnico + ' -  ' + Tecnico.Te_Descripcion AS TECNICO,
+	Solicitud_Refaccion_Encabezado.Sr_Comentario AS COMENTARIO,
+	Solicitud_Refaccion_Encabezado.Es_Cve_Estado AS ST,
+	Solicitud_Refaccion_Encabezado.Sr_Urgente AS URGENTE
+FROM Solicitud_Refaccion_Encabezado
+	INNER JOIN Sucursal ON Sucursal.Sc_Cve_Sucursal = Solicitud_Refaccion_Encabezado.Sc_Cve_Sucursal
+	INNER JOIN Almacen ON Almacen.Al_Cve_Almacen = Solicitud_Refaccion_Encabezado.Al_Cve_Almacen AND Almacen.Sc_Cve_Sucursal = Solicitud_Refaccion_Encabezado.Sc_Cve_Sucursal
+	INNER JOIN Tecnico ON Tecnico.Te_Cve_Tecnico = Solicitud_Refaccion_Encabezado.Te_Cve_Tecnico
+WHERE
+	Sr_Folio = @Sr_Folio
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GO
+
+IF EXISTS (SELECT * FROM Sysobjects Where Name = 'SP_RPT_Z388_2_2' and type= 'P') DROP PROCEDURE SP_RPT_Z388_2_2
+GO
+CREATE PROCEDURE SP_RPT_Z388_2_2
+@Sr_Folio as nVarChar(10)
+AS
+SELECT 
+	Sr_Id AS ID,
+	Solicitud_Refaccion_Detalle.Pr_Cve_Producto AS CVE_PRODUCTO,
+	Producto.Pr_Descripcion AS DESC_PRODUCTO,
+	Solicitud_Refaccion_Detalle.Sr_Cantidad AS CANTIDAD,
+	Solicitud_Refaccion_Detalle.Sr_Unidad AS UNIDAD
+FROM Solicitud_Refaccion_Detalle
+	INNER JOIN Producto ON Producto.Pr_Cve_Producto = Solicitud_Refaccion_Detalle.Pr_Cve_Producto
+WHERE
+	Sr_Folio = @Sr_Folio
+ORDER BY
+	Sr_Id
+
+
+
+
+GO
+
+IF EXISTS (SELECT * FROM Sysobjects Where Name = 'SP_RPT_Z388_2_3' and type= 'P') DROP PROCEDURE SP_RPT_Z388_2_3
+GO
+CREATE PROCEDURE [dbo].[SP_RPT_Z388_2_3]
+@Sr_Folio as nVarChar(10)
+AS
+SELECT 
+	Sr_Folio AS FOLIO,
+	Id_Solicitud_Trabajo AS SOLICITUD,
+	Ot_Folio AS FOLIO_OT,
+	Sr_Fecha AS FECHA,
+	DATENAME(MONTH, Sr_Fecha)  + ' ' + CAST(YEAR(Sr_Fecha) AS nvarchar(15)) AS EMISION,
+	Solicitud_Refaccion_Encabezado.Sc_Cve_Sucursal AS CVE_SUCURSAL,
+	Sucursal.Sc_Descripcion AS DESC_SUCURSAL,
+	Solicitud_Refaccion_Encabezado.Al_Cve_Almacen AS CVE_ALMACEN,
+	Almacen.Al_Descripcion AS DESC_ALMACEN,
+	Solicitud_Refaccion_Encabezado.Te_Cve_Tecnico AS CVE_TECNICO,
+	Tecnico.Te_Descripcion AS DESC_TECNICO,
+	Solicitud_Refaccion_Encabezado.Sr_Comentario AS COMENTARIO,
+	Solicitud_Refaccion_Encabezado.Es_Cve_Estado AS ST
+FROM Solicitud_Refaccion_Encabezado
+	INNER JOIN Sucursal ON Sucursal.Sc_Cve_Sucursal = Solicitud_Refaccion_Encabezado.Sc_Cve_Sucursal
+	INNER JOIN Almacen ON Almacen.Al_Cve_Almacen = Solicitud_Refaccion_Encabezado.Al_Cve_Almacen AND Almacen.Sc_Cve_Sucursal = Solicitud_Refaccion_Encabezado.Sc_Cve_Sucursal
+	INNER JOIN Tecnico ON Tecnico.Te_Cve_Tecnico = Solicitud_Refaccion_Encabezado.Te_Cve_Tecnico
+WHERE
+	Sr_Folio = @Sr_Folio
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+GO
+
+
+------------------------------------------------------------------------------------------
+-- FORMATO DE IMPRESION GRAFICO: Z388_2
+------------------------------------------------------------------------------------------
+
+DELETE FROM FORMATO WHERE Fr_Cve_Formato = 'Z388_2' 
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0240', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Clave', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 10, 0, '10,71', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0250', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Descripción', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 10, 0, '30,71', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0260', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Cantidad', '1', 0, '###,###,###.#0', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 10, 0, '180,71', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0270', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Um', '1', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 10, 0, '200,71', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0280', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', '', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 8, 0, '10,75', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '02', '0000', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'CVE_PRODUCTO', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '10', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '02', '0010', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'DESC_PRODUCTO', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '30', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0230', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', '', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '100,61', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '02', '0030', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'UNIDAD', '1', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '200', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0220', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', '', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '70,61', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0210', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'COMENTARIO', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '30,61', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0200', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Comentario:', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 9, 0, '10,61', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0190', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'EMISION', '2', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 8, 0, '175,63', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0180', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Emisión', '2', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 8, 0, '175,59', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0170', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'FECHA', '2', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 8, 0, '175,56', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0160', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Fecha', '2', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 8, 0, '175,52', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0150', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'FOLIO', '2', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 8, 0, '175,48', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0140', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Folio', '2', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 8, 0, '175,44', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0130', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'ST', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '132,55', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0120', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'ST:', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 9, 0, '125,55', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0110', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'ALMACEN', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '25,55', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0100', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Almacén:', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 9, 0, '10,55', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0090', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'URGENTE', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '135,50', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0080', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Urgente:', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 9, 0, '120,50', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0070', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'SUCURSAL', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '26,50', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0060', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Sucursal:', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 9, 0, '10,50', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0050', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'TECNICO', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '42,45', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0040', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Nombre del técnico: ', '0', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 9, 0, '10,45', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0030', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'Versión: 01', '1', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 9, 0, '200,38', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0020', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'SOLICITUD DE REFACCIONES', '2', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 10, 0, '110,30', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0010', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', 'SANEAMIENTO SANA S.C. DE R.L.', '2', 0, '', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'SI', 12, 0, '110,20', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '01', '0000', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '07', 'Z388_2', '0', 0, 'MEMBRETE', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Currier', 'NO', 9, 0, '0,0,215,280', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '02', '0020', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '02', 'CANTIDAD', '1', 0, '###,###,###.#0', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 9, 0, '180', 'NO')
+GO
+
+INSERT INTO Formato(Fr_Cve_Formato, Fr_Tipo, Fr_ID, Fr_Procedure1, Fr_Procedure2, Fr_Procedure3, Fr_Descripcion, Fr_LineasDetalle, Fr_Accion, Fr_Campo, Fr_Valor, Fr_Alineacion, Fr_Ancho, Fr_Formato, Fr_Caida_Libre, Oper_Alta, Fecha_Alta, Oper_Ult_Modif, Fecha_Ult_Modif, Oper_Baja, Fecha_Baja, Es_Cve_Estado, Fr_Grafico, Fr_Ancho_Hoja, Fr_Alto_Hoja, Fr_Font_Name, Fr_Font_Bold, Fr_Font_Size, Fr_Font_Color, Fr_Posicion, Fr_Horizontal) 
+VALUES('Z388_2', '03', '0000', 'SP_RPT_Z388_2_1', 'SP_RPT_Z388_2_2', 'SP_RPT_Z388_2_3', 'FORMATO DE SOLICITUD DE REFACCIONES', 129, '0', '01', '13', '1', 0, 'CARACTER', 'SI', 'DESARROLLO', '2000-01-01', 'DESARROLLO', '2000-01-01', '', NULL, 'AC', 'SI', 220, 275, 'Arial', 'NO', 8, 0, '175,135', 'NO')
+GO
+
+
+SET QUOTED_IDENTIFIER ON
+GO
